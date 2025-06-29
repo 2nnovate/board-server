@@ -4,6 +4,7 @@ import { Post } from './entities/post.entity';
 import { Comment } from '../comments/entities/comment.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PostResponseDto } from './dtos/post-response.dto';
+import { UpdatePostDto } from './dtos/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -64,5 +65,18 @@ export class PostsService {
       author: createPostDto.author,
       password: createPostDto.password,
     });
+  }
+
+  async update(id: number, updatePostDto: UpdatePostDto): Promise<boolean> {
+    const [updatedRows] = await this.postsRepository.update({
+      title: updatePostDto.title,
+      content: updatePostDto.content,
+    }, {
+      where: {
+        id,
+      },
+    });
+
+    return !!updatedRows;
   }
 }

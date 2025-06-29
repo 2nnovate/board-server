@@ -6,11 +6,15 @@ import {
   Query,
   Post,
   Body,
+  Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PostResponseDto } from './dtos/post-response.dto';
 import { SearchPostDto } from './dtos/search-posts.dto';
+import { UpdatePostDto } from './dtos/update-post.dto';
+import { PostPasswordGuard } from './guards/post-password.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -51,5 +55,16 @@ export class PostsController {
   ): Promise<PostResponseDto> {
     const result = await this.postsService.create(createPostDto);
     return new PostResponseDto(result);
+  }
+
+  @UseGuards(PostPasswordGuard)
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+  ): Promise<PostResponseDto> {
+    await this.postsService.update(id, updatePostDto);
+    const updated = await this.postsService.findById(id);
+    return new PostResponseDto(updated);
   }
 }
