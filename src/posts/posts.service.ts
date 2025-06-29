@@ -17,7 +17,7 @@ export class PostsService {
     pageSize: number = 20,
     searchKey?: string,
     searchValue?: string,
-  ): Promise<{ data: PostResponseDto[], total: number }> {
+  ): Promise<{ data: Post[], total: number }> {
     const shouldSearch = searchKey && searchValue;
     const { count, rows: result } = await this.postsRepository.findAndCountAll<Post>({
       where: {
@@ -39,13 +39,13 @@ export class PostsService {
     });
 
     return {
-      data: result.map(post => new PostResponseDto(post)),
+      data: result,
       total: count,
     };
   }
 
-  async findById(id: number): Promise<PostResponseDto> {
-    const post = await this.postsRepository.findOne<Post>({
+  async findById(id: number): Promise<Post> {
+    return this.postsRepository.findOne<Post>({
       where: {
         id,
       },
@@ -55,18 +55,14 @@ export class PostsService {
         order: [['createdAt', 'DESC']],
       }],
     });
-
-    return new PostResponseDto(post);
   }
 
-  async create(createPostDto: CreatePostDto): Promise<PostResponseDto> {
-    const post = await this.postsRepository.create<Post>({
+  async create(createPostDto: CreatePostDto): Promise<Post> {
+    return this.postsRepository.create<Post>({
       title: createPostDto.title,
       content: createPostDto.content,
       author: createPostDto.author,
       password: createPostDto.password,
     });
-
-    return new PostResponseDto(post);
   }
 }

@@ -19,30 +19,37 @@ export class PostsController {
   ) {}
 
   @Get()
-  findAll(
+  async findAll(
     @Query('current', ParseIntPipe) current?: number,
     @Query('pageSize', ParseIntPipe) pageSize?: number,
     @Query() searchPostDto?: SearchPostDto,
   ): Promise<{ data: PostResponseDto[], total: number }> {
-    return this.postsService.list(
+    const { data, total } = await this.postsService.list(
       current,
       pageSize,
       searchPostDto?.searchKey,
       searchPostDto?.searchValue,
     );
+
+    return {
+      data: data.map(post => new PostResponseDto(post)),
+      total,
+    };
   }
 
   @Get(':id')
-  findOne(
+  async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PostResponseDto> {
-    return this.postsService.findById(id);
+    const result = await this.postsService.findById(id);
+    return new PostResponseDto(result);
   }
 
   @Post()
-  create( 
+  async create( 
     @Body() createPostDto: CreatePostDto,
   ): Promise<PostResponseDto> {
-    return this.postsService.create(createPostDto);
+    const result = await this.postsService.create(createPostDto);
+    return new PostResponseDto(result);
   }
 }
