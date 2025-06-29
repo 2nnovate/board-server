@@ -9,6 +9,7 @@ export class CommentResponseDto {
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
+    replies?: CommentResponseDto[];
 
     constructor(comment: Comment) {
         this.id = comment.id;

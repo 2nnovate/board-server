@@ -1,5 +1,8 @@
 import {
   Controller,
+  Get,
+  Param,
+  ParseIntPipe,
   Post,
   Body,
 } from '@nestjs/common';
@@ -12,6 +15,13 @@ export class PostsController {
   constructor(
     private readonly postsService: PostsService
   ) {}
+
+  @Get(':id')
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<PostResponseDto> {
+    return this.postsService.findById(id);
+  }
 
   @Post()
   create( 

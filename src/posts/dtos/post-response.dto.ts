@@ -1,4 +1,5 @@
 import { Post } from '../entities/post.entity';
+import { Comment } from '../../comments/entities/comment.entity';
 import { CommentResponseDto } from '../../comments/dtos/comment-response.dto';
 
 export class PostResponseDto {
@@ -19,6 +20,17 @@ export class PostResponseDto {
         this.createdAt = post.createdAt;
         this.updatedAt = post.updatedAt;
         this.deletedAt = post.deletedAt;
-        this.comments = post.comments?.map(comment => new CommentResponseDto(comment));
+
+        this.comments = this.buildCommentTree(post.comments || []);
     }
+
+    private buildCommentTree(comments: Comment[], parentId: number | null = null): CommentResponseDto[] {
+      return comments
+          .filter(comment => comment.parentId === parentId)
+          .map(comment => {
+              const commentDto = new CommentResponseDto(comment);
+              commentDto.replies = this.buildCommentTree(comments, comment.id);
+              return commentDto;
+          });
+  }
 }
