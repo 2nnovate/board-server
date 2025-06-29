@@ -8,8 +8,8 @@ import {
   CreatedAt,
   UpdatedAt,
   BeforeCreate,
-  BeforeUpdate,
 } from 'sequelize-typescript';
+import * as bcrypt from 'bcrypt';
 import { Comment } from '../../comments/entities/comment.entity';
 
 @Table({
@@ -73,6 +73,14 @@ export class Post extends Model {
     field: 'deleted_at',
   })
   deletedAt: Date;
+
+  @BeforeCreate
+  static async hashPasswordOnCreate(instance: Post) {
+    if (!instance.password) return;
+
+    const saltRounds = 10;
+    instance.password = await bcrypt.hash(instance.password, saltRounds);
+  }
 
   // Associations
   @HasMany(() => Comment, {
