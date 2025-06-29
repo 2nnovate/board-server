@@ -1,0 +1,40 @@
+services:
+  board-api:
+    container_name: board-api
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 3000:3000
+    environment:
+      - TZ=Asia/Seoul
+
+  db:
+    container_name: db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Seoul
+    ports:
+      - 3305:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/my.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./db/scripts:/docker-entrypoint-initdb.d
+    restart: always
+
+  redis:
+    container_name: redis
+    image: redis:8.0
+    ports:
+      - 6378:6379
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mysql_data:
+  redis_data:
