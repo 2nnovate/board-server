@@ -6,4 +6,5 @@ INSERT INTO keyword_notifications (author, keyword) VALUES
 ('홍길동', 'Node.js'),
 ('홍길동', 'TypeScript'),
 ('김철수', '개발'),
+('박인호', '원티드랩'),
 ('이영희', 'MySQL');
