@@ -17,11 +17,13 @@ import { PostResponseDto } from './dtos/post-response.dto';
 import { SearchPostDto } from './dtos/search-posts.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { PostPasswordGuard } from './guards/post-password.guard';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Controller('post')
 export class PostsController {
   constructor(
-    private readonly postsService: PostsService
+    private readonly postsService: PostsService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   @Get('list')
@@ -56,6 +58,12 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
   ): Promise<PostResponseDto> {
     const result = await this.postsService.create(createPostDto);
+    this.notificationsService.sendNotification(
+      result.content,
+      'POST',
+      result.id,
+    );
+
     return new PostResponseDto(result);
   }
 
@@ -66,7 +74,14 @@ export class PostsController {
     @Body() updatePostDto: UpdatePostDto,
   ): Promise<PostResponseDto> {
     await this.postsService.update(id, updatePostDto);
+
     const updated = await this.postsService.findById(id);
+    this.notificationsService.sendNotification(
+      updated.content,
+      'POST',
+      updated.id,
+    );
+
     return new PostResponseDto(updated);
   }
 
