@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PostsService } from '../posts.service';
@@ -25,7 +26,7 @@ export class PostPasswordGuard implements CanActivate {
     const postId = parseInt(request.params.id, 10);
     const post = await this.postsService.findById(postId);
     if (!post) {
-      throw new UnauthorizedException('Post not found');
+      throw new NotFoundException('Post not found');
     }
 
     const isValid = await bcrypt.compare(password, post.password);
