@@ -16,7 +16,7 @@ export class KeywordSubscriptionTrie {
     }
 
     public addKeyword(keyword: string, subscriber: string): void {
-        
+      this._root.children.set('test', new KeywordTrie());
     }
 
     public findKeywordSubscribers(text: string): string[] {
