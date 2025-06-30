@@ -1,4 +1,3 @@
-
 import { Sequelize } from 'sequelize-typescript';
 import { Post } from '../posts/entities/post.entity';
 import { Comment } from '../comments/entities/comment.entity';
