@@ -63,6 +63,19 @@ describe('KeywordSubscriptionTrie', () => {
           expect(result).toEqual([]);
         });
       });
+
+      describe('when text has matched keywords', () => {
+        it('should return empty array', () => {
+          // Given
+          const text = '원티드랩에서 Node.js 개발자를 찾고있습니다.';
+          
+          // When
+          const result = trie.findKeywordSubscribers(text);
+          
+          // Then
+          expect(result).toEqual(['이영희', '홍길동']);
+        });
+      });
     });
 });
  
