@@ -1,6 +1,7 @@
 class KeywordTrie {
   children: Map<string, KeywordTrie> = new Map();
   isEndOfWord: boolean = false;
+  keyword: string = '';
   subscribers: Set<string> = new Set();
 }
 
@@ -30,20 +31,29 @@ export class KeywordSubscriptionTrie {
       }
 
       currentNode.isEndOfWord = true;
+      currentNode.keyword = keyword;
       currentNode.subscribers.add(subscriber);
     }
 
-    public findKeywordSubscribers(text: string): string[] {
+    public findKeywordSubscribers(text: string): Map<string, Set<string>> {
         const words = text.split(' ');
-        const subscribers: Set<string> = new Set();
+        const subscribersByKeyword: Map<string, Set<string>> = new Map();
         for (const word of words) {
           const matchedKeywords = this._searchMatchedKeywords(word);
           if (!matchedKeywords.length) continue;
 
-          const currentSubscribers = matchedKeywords.flatMap(keyword => [...keyword.subscribers]);
-          currentSubscribers.forEach(subscriber => subscribers.add(subscriber));
+          matchedKeywords.forEach((keywordTrie: KeywordTrie) => {
+            const existingSubscribers = subscribersByKeyword.get(keywordTrie.keyword);
+            if (!existingSubscribers) {
+              subscribersByKeyword.set(keywordTrie.keyword, new Set([...keywordTrie.subscribers]));
+              return;
+            }
+            
+            subscribersByKeyword.set(keywordTrie.keyword, new Set([...existingSubscribers, ...keywordTrie.subscribers]));
+          });
         }
-        return Array.from(subscribers);
+
+        return subscribersByKeyword;
     }
 
     private _searchMatchedKeywords(word: string): KeywordTrie[] {

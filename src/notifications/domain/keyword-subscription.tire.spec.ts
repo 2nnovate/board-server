@@ -52,7 +52,7 @@ describe('KeywordSubscriptionTrie', () => {
       });
 
       describe('when text has not matched keywords', () => {
-        it('should return empty array', () => {
+        it('should return empty map', () => {
           // Given
           const text = 'test';
           
@@ -60,12 +60,12 @@ describe('KeywordSubscriptionTrie', () => {
           const result = trie.findKeywordSubscribers(text);
           
           // Then
-          expect(result).toEqual([]);
+          expect(result).toEqual(new Map());
         });
       });
 
       describe('when text has matched keywords', () => {
-        it('should return empty array', () => {
+        it('should return keyword subscribers map', () => {
           // Given
           const text = '원티드랩에서 Node.js 개발자를 찾고있습니다.';
           
@@ -73,7 +73,10 @@ describe('KeywordSubscriptionTrie', () => {
           const result = trie.findKeywordSubscribers(text);
           
           // Then
-          expect(result).toEqual(['이영희', '홍길동']);
+          expect(result).toEqual(new Map([
+            ['개발', new Set(['홍길동'])],
+            ['원티드랩', new Set(['이영희'])],
+          ]));
         });
       });
     });
