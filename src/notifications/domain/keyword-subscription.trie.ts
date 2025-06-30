@@ -16,13 +16,16 @@ export class KeywordSubscriptionTrie {
     }
 
     public addKeyword(keyword: string, subscriber: string): void {
+      const lowercaseKeyword = keyword.toLowerCase().trim();
+
       let currentNode = this.root;
-      for (const char of keyword) {
+      for (const char of lowercaseKeyword) {
         let childNode = currentNode.children.get(char);
         if (!childNode) {
           childNode = new KeywordTrie();
           currentNode.children.set(char, childNode);
         }
+
         currentNode = childNode;
       }
 
@@ -31,10 +34,33 @@ export class KeywordSubscriptionTrie {
     }
 
     public findKeywordSubscribers(text: string): string[] {
-        return [];
+        const words = text.split(' ');
+        const subscribers: Set<string> = new Set();
+        for (const word of words) {
+          const matchedKeywords = this._searchMatchedKeywords(word);
+          if (!matchedKeywords.length) continue;
+
+          const currentSubscribers = matchedKeywords.flatMap(keyword => [...keyword.subscribers]);
+          currentSubscribers.forEach(subscriber => subscribers.add(subscriber));
+        }
+        return Array.from(subscribers);
     }
 
-    private _searchMatchedKeywords(text: string): KeywordTrie[] {
-      return [];
+    private _searchMatchedKeywords(word: string): KeywordTrie[] {
+      const lowercaseWord = word.toLowerCase().trim();
+      const matchedKeywords: KeywordTrie[] = [];
+
+      let currentNode = this.root;
+      for (const char of lowercaseWord) {
+        const childNode = currentNode.children.get(char);
+        if (!childNode) break;
+
+        currentNode = childNode;
+        if (!currentNode.isEndOfWord) continue;
+
+        matchedKeywords.push(currentNode);
+      }
+
+      return matchedKeywords;
   }
 }
