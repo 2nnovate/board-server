@@ -43,5 +43,26 @@ describe('KeywordSubscriptionTrie', () => {
         });
       });
     });
+
+    describe('findKeywordSubscribers', () => {
+      beforeEach(() => {
+        trie.addKeyword('개발', '홍길동');
+        trie.addKeyword('AI', '김철수');
+        trie.addKeyword('원티드랩', '이영희');
+      });
+
+      describe('when text has not matched keywords', () => {
+        it('should return empty array', () => {
+          // Given
+          const text = 'test';
+          
+          // When
+          const result = trie.findKeywordSubscribers(text);
+          
+          // Then
+          expect(result).toEqual([]);
+        });
+      });
+    });
 });
-    
+ 

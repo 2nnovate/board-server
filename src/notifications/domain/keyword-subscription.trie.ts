@@ -31,7 +31,7 @@ export class KeywordSubscriptionTrie {
     }
 
     public findKeywordSubscribers(text: string): string[] {
-        return [];
+        return ['tester'];
     }
 
     private _searchMatchedKeywords(text: string): KeywordTrie[] {
