@@ -2,6 +2,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Post } from '../posts/entities/post.entity';
 import { Comment } from '../comments/entities/comment.entity';
+import { KeywordNotification } from '../notifications/entities/keyword-notification.entity';
 
 export const databaseProviders = [
   {
@@ -15,7 +16,7 @@ export const databaseProviders = [
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE,
       });
-      sequelize.addModels([Post, Comment]);
+      sequelize.addModels([Post, Comment, KeywordNotification]);
       return sequelize;
     },
   },
