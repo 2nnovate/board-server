@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "up:containers": "docker compose -p board-server -f docker-compose.yml up",
     "down:containers": "docker compose -p board-server down",
-    "reset:volumes": "docker volume ls -q | grep '^board-server' | xargs -r docker volume rm"
+    "reset:volumes": "docker volume ls -q | grep '^board-server' | xargs -r docker volume rm",
+    "reset:images": "docker rmi $(docker images -q --filter \"reference=board-server-*\")"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["npm", "run", "start:debug"]
+    command: ["npm", "run", "start"]
     depends_on:
       - db
     ports:
@@ -17,8 +17,6 @@ services:
       - DB_USER=root
       - DB_PASSWORD=root
       - DB_DATABASE=anonymous_board
-    volumes:
-      - .:/app
 
   db:
     container_name: db
