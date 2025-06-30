@@ -18,13 +18,13 @@ import { SearchPostDto } from './dtos/search-posts.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { PostPasswordGuard } from './guards/post-password.guard';
 
-@Controller('posts')
+@Controller('post')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService
   ) {}
 
-  @Get()
+  @Get('list')
   async findAll(
     @Query('current', new DefaultValuePipe(1), ParseIntPipe) current?: number,
     @Query('pageSize', new DefaultValuePipe(20), ParseIntPipe) pageSize?: number,
