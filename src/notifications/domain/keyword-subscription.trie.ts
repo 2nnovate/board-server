@@ -16,7 +16,18 @@ export class KeywordSubscriptionTrie {
     }
 
     public addKeyword(keyword: string, subscriber: string): void {
-      this._root.children.set('test', new KeywordTrie());
+      let currentNode = this.root;
+      for (const char of keyword) {
+        let childNode = currentNode.children.get(char);
+        if (!childNode) {
+          childNode = new KeywordTrie();
+          currentNode.children.set(char, childNode);
+        }
+        currentNode = childNode;
+      }
+
+      currentNode.isEndOfWord = true;
+      currentNode.subscribers.add(subscriber);
     }
 
     public findKeywordSubscribers(text: string): string[] {
