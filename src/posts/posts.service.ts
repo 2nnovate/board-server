@@ -79,4 +79,14 @@ export class PostsService {
 
     return !!updatedRows;
   }
+
+  async delete(id: number): Promise<boolean> {
+    const deletedRows = await this.postsRepository.destroy({
+      where: {
+        id,
+      },
+    });
+
+    return !!deletedRows;
+  }
 }

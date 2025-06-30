@@ -8,6 +8,7 @@ import {
   Body,
   Put,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -66,5 +67,14 @@ export class PostsController {
     await this.postsService.update(id, updatePostDto);
     const updated = await this.postsService.findById(id);
     return new PostResponseDto(updated);
+  }
+
+  @UseGuards(PostPasswordGuard)
+  @Delete(':id')
+  async delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ deleted: boolean }> {
+    const deleted = await this.postsService.delete(id);
+    return { deleted };
   }
 }
