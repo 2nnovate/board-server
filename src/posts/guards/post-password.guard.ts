@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -20,7 +21,7 @@ export class PostPasswordGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { password } = request.body;
     if (!password) {
-      throw new UnauthorizedException('Password is required');
+      throw new BadRequestException('Password is required');
     }
 
     const postId = parseInt(request.params.id, 10);
