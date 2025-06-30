@@ -12,11 +12,13 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dtos/create-comment.dto';
 import { CommentResponseDto } from './dtos/comment-response.dto';
 import { PostExistGuard } from './guards/post-exist.guard';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Controller('comment')
 export class CommentsController {
   constructor(
-    private readonly commentsService: CommentsService
+    private readonly commentsService: CommentsService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   @Get('list')
@@ -41,6 +43,12 @@ export class CommentsController {
     @Body() createCommentDto: CreateCommentDto,
   ): Promise<CommentResponseDto> {
     const result = await this.commentsService.create(createCommentDto);
+    this.notificationsService.sendNotification(
+      result.content,
+      'COMMENT',
+      result.id,
+    );
+
     return new CommentResponseDto(result);
   }
 }
