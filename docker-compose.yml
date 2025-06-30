@@ -8,7 +8,6 @@ services:
     command: ["npm", "run", "start:debug"]
     depends_on:
       - db
-      - redis
     ports:
       - 3000:3000
     environment:
@@ -35,14 +34,5 @@ services:
       - ./db/scripts:/docker-entrypoint-initdb.d
     restart: always
 
-  redis:
-    container_name: redis
-    image: redis:8.0
-    ports:
-      - 6378:6379
-    volumes:
-      - redis_data:/data
-
 volumes:
   mysql_data:
-  redis_data:
