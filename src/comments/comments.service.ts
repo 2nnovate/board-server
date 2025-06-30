@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Comment } from './entities/comment.entity';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 
 @Injectable()
 export class CommentsService {
@@ -21,5 +22,14 @@ export class CommentsService {
       data: result,
       total: count,
     };
+  }
+
+  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+    return this.commentsRepository.create<Comment>({
+      postId: createCommentDto.postId,
+      parentId: createCommentDto.parentId,
+      content: createCommentDto.content,
+      author: createCommentDto.author,
+    });
   }
 }

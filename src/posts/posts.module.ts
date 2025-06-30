@@ -10,5 +10,6 @@ import { postsProviders } from './posts.providers';
     PostsService,
     ...postsProviders,
   ],
+  exports: [PostsService],
 })
 export class PostModule {}
