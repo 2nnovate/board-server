@@ -9,6 +9,7 @@ import {
   Put,
   UseGuards,
   Delete,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -25,8 +26,8 @@ export class PostsController {
 
   @Get()
   async findAll(
-    @Query('current', ParseIntPipe) current?: number,
-    @Query('pageSize', ParseIntPipe) pageSize?: number,
+    @Query('current', new DefaultValuePipe(1), ParseIntPipe) current?: number,
+    @Query('pageSize', new DefaultValuePipe(20), ParseIntPipe) pageSize?: number,
     @Query() searchPostDto?: SearchPostDto,
   ): Promise<{ data: PostResponseDto[], total: number }> {
     const { data, total } = await this.postsService.list(
